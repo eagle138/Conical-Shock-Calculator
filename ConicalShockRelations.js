@@ -51,27 +51,27 @@ function getShockAngle(gamma, m1, sigma)
     // Error check the inputs
     if(gamma <= 1.0) 
     {
-		alert("ERROR: Gamma must be greater than 1!");
-		return;
-	} // if
+        alert("ERROR: Gamma must be greater than 1!");
+        return;
+    } // if
     
-	if(m1 <= 1.0) 
+    if(m1 <= 1.0) 
     {
-		alert("ERROR: m1 must be greater than 1!");
-		return;
-	} // if
-	
+        alert("ERROR: m1 must be greater than 1!");
+        return;
+    } // if
+    
     if(sigma > Math.PI/2.0) 
     {
         alert("ERROR: Cone angle must be less than 90 degrees!");
         return;
     } // if
     
-	if(sigma < 0.0) {
+    if(sigma < 0.0) {
         alert("ERROR: Cone angle must be greater than 0 degrees!");
         return;
-	} // if
-		
+    } // if
+        
     // Guess a wave angle to start searching from,
     // use Mach angle since (Mach angle)<(wave angle)<(90deg)
     beta = Math.asin(1.0/m1);
@@ -88,9 +88,9 @@ function getShockAngle(gamma, m1, sigma)
         sigma0 = getConeAngle(gamma, m1, beta);
         
     } // while
-		
-	return beta
-		
+        
+    return beta
+        
 } // getShockAngle
 
 //--------------------------------------------------------------------------
@@ -108,7 +108,7 @@ function getdVr(gamma, beta, Vr, Vtheta)
 
     dVr = Vtheta;
     
-	return dVr;
+    return dVr;
     
 } // getdVr
 
@@ -130,7 +130,7 @@ function getdVtheta(gamma, beta, Vr, Vtheta)
                /((gamma-1.0)/2.0*(1.0-Vr*Vr-Vtheta*Vtheta)-Vtheta*Vtheta);
 
               
-	return dVtheta
+    return dVtheta
     
 } // getdVtheta
 
@@ -154,73 +154,74 @@ function getConeAngle(gamma, m1, beta)
     // Error check the inputs
     if(gamma <= 1.0) 
     {
-		alert("ERROR: Gamma must be greater than 1!");
-		return;
-	} // if
+        alert("ERROR: Gamma must be greater than 1!");
+        return;
+    } // if
     
-	if(m1 <= 1.0) 
+    if(m1 <= 1.0) 
     {
-		alert("ERROR: m1 must be greater than 1!");
-		return;
-	} // if
-	
+        alert("ERROR: m1 must be greater than 1!");
+        return;
+    } // if
+    
     if(beta > Math.PI/2.0) 
     {
         alert("ERROR: Shock angle must be less than 90 degrees!");
         return;
     } // if
     
-	if(beta < 0.0) {
+    if(beta < 0.0) {
         alert("ERROR: Shock angle must be greater than 0 degrees!");
         return;
-	} // if
+    } // if
 
-	var theta0 = beta;
+    var theta0 = beta;
 
-	// Calculate the flow deflection angle right at the shock 		
-	var delta = getFlowDeflectionAngle(gamma, m1, beta);
-		
-	// Calculate the Mach number after the shock using Mach number components
+    // Calculate the flow deflection angle right at the shock       
+    var delta = getFlowDeflectionAngle(gamma, m1, beta);
+        
+    // Calculate the Mach number after the shock using Mach number components
     // normal to the shock and the normal shock relations
-	var m1n = m1*Math.sin(beta);
-	var m2n = Math.sqrt((1.0 + 0.5 * (gamma - 1.0) * m1n * m1n) / (gamma * m1n * m1n - 0.5 * (gamma - 1.0)));
+    var m1n = m1*Math.sin(beta);
+    var m2n = Math.sqrt((1.0 + 0.5 * (gamma - 1.0) * m1n * m1n) / (gamma * m1n * m1n - 0.5 * (gamma - 1.0)));
     var m2 = m2n/Math.sin(beta-delta);
-	
-	// Calculate non-dimensional components of the velocity 
+    
+    // Calculate non-dimensional components of the velocity 
     // in theta and r direction. These are initial values for the ODE
-	var V0 = Math.pow((1.0+2.0/((gamma-1.0)*m2*m2)),(-0.5));
-	var Vr0 = V0 * Math.cos(theta0-delta);
-	var Vtheta0 = -V0 * Math.sin(theta0-delta);
-	
+    var V0 = Math.pow((1.0+2.0/((gamma-1.0)*m2*m2)),(-0.5));
+    var Vr0 = V0 * Math.cos(theta0-delta);
+    var Vtheta0 = -V0 * Math.sin(theta0-delta);
+    
     // Using a Runge-Kutta 4th order ODE estimation, step down the shock angle
     // by the angle increment until the the Vtheta component is zero,
     // which means we've reached the cone surface.
-	while(Vtheta0 < 0.0)
+    while(Vtheta0 < 0.0)
     {
-				
+                
         // Calculate the Runge-Kutta 4th order constants        
-		var k1 = getdVr(gamma, theta0, Vr0, Vtheta0);
-		var j1 = getdVtheta(gamma, theta0, Vr0, Vtheta0);
+        var k1 = getdVr(gamma, theta0, Vr0, Vtheta0);
+        var j1 = getdVtheta(gamma, theta0, Vr0, Vtheta0);
         
-		var k2 = getdVr(gamma, theta0+ANGLE_INC/2.0, Vr0+(ANGLE_INC/2.0)*k1, Vtheta0+(ANGLE_INC/2.0)*j1);
-		var j2 = getdVtheta(gamma, theta0+ANGLE_INC/2.0, Vr0+(ANGLE_INC/2.0)*k1, Vtheta0+(ANGLE_INC/2.0)*j1);
+        var k2 = getdVr(gamma, theta0+ANGLE_INC/2.0, Vr0+(ANGLE_INC/2.0)*k1, Vtheta0+(ANGLE_INC/2.0)*j1);
+        var j2 = getdVtheta(gamma, theta0+ANGLE_INC/2.0, Vr0+(ANGLE_INC/2.0)*k1, Vtheta0+(ANGLE_INC/2.0)*j1);
         
-    	var k3 = getdVr(gamma, theta0+ANGLE_INC/2.0, Vr0+(ANGLE_INC/2.0)*k2, Vtheta0+(ANGLE_INC/2.0)*j2);
-		var j3 = getdVtheta(gamma, theta0+ANGLE_INC/2.0, Vr0+(ANGLE_INC/2.0)*k2, Vtheta0+(ANGLE_INC/2.0)*j2);
+        var k3 = getdVr(gamma, theta0+ANGLE_INC/2.0, Vr0+(ANGLE_INC/2.0)*k2, Vtheta0+(ANGLE_INC/2.0)*j2);
+        var j3 = getdVtheta(gamma, theta0+ANGLE_INC/2.0, Vr0+(ANGLE_INC/2.0)*k2, Vtheta0+(ANGLE_INC/2.0)*j2);
         
-    	var k4 = getdVr(gamma, theta0+ANGLE_INC, Vr0+ANGLE_INC*k3, Vtheta0+ANGLE_INC*j3);
-		var j4 = getdVtheta(gamma, theta0+ANGLE_INC, Vr0+ANGLE_INC*k3, Vtheta0+ANGLE_INC*j3);
-    	
-		Vr0 = Vr0 + (ANGLE_INC/6.0) * (k1 + 2.0*k2 + 2.0*k3 + k4);
-		Vtheta0 = Vtheta0 + (ANGLE_INC/6.0) * (j1 + 2.0*j2 + 2.0*j3 + j4);
-    	
-		theta0 = theta0 + ANGLE_INC;
+        var k4 = getdVr(gamma, theta0+ANGLE_INC, Vr0+ANGLE_INC*k3, Vtheta0+ANGLE_INC*j3);
+        var j4 = getdVtheta(gamma, theta0+ANGLE_INC, Vr0+ANGLE_INC*k3, Vtheta0+ANGLE_INC*j3);
         
-	} // while
+        // Use the Runge-Kutta constants to estimate Vr and Vtheta
+        Vr0 = Vr0 + (ANGLE_INC/6.0) * (k1 + 2.0*k2 + 2.0*k3 + k4);
+        Vtheta0 = Vtheta0 + (ANGLE_INC/6.0) * (j1 + 2.0*j2 + 2.0*j3 + j4);
+        
+        theta0 = theta0 + ANGLE_INC;
+        
+    } // while
 
     // The angle at which Vtheta equals zero is the cone angle
-	var sigma = theta0;
-	
-	return sigma
+    var sigma = theta0;
+    
+    return sigma
     
 } // getConeAngle
