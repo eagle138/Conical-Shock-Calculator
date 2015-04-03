@@ -1,0 +1,43 @@
+<html>
+
+    <script src="ConicalShockRelations.js"></script>
+
+    <body>
+        <hr>
+        
+            <big><b>Example Conical Shock Relations Output</b></big>
+            
+            <p> getConeAngle Test: </p>
+            <p>
+                <script LANGUAGE="JavaScript">
+                    
+                    gamma = 1.4;
+                    m1 = 5.0;
+                    shock_angle = Math.PI/4;
+                
+                    cone_angle = getConeAngle(gamma, m1, shock_angle);
+                    
+                    document.write("Cone Angle = " + (cone_angle*180/Math.PI));
+                    
+                </script>
+            </p>
+            
+            <p> getShockAngle Test: </p>
+            <p>
+                <script LANGUAGE="JavaScript">
+                    
+                    gamma = 1.4;
+                    m1 = 5.0;
+                    cone_angle = Math.PI/8;
+                
+                    x = getShockAngle(gamma, m1, cone_angle);
+                    
+                    document.write("Shock Angle = " + (x*180/Math.PI));
+                    
+                </script>
+            </p>
+
+        <hr>
+    </body>
+    
+</html>
